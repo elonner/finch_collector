@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>All Finches</h1>
+
+<ul>
+    {% for finch in finches %}
+        <li>
+            <h3>{{ finch.name }}</h3>
+            <p>Species: {{ finch.species }} Finch</p>
+            <p>Island: {{ finch.island }}</p>
+            <a href="{% url 'detail' finch.id %}">More</a>
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

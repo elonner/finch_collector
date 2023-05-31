@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>{{ finch.name }}</h1>
+
+<h3>Species: {{ finch.species }}</h3>
+<h3>Island: {{ finch.island }}</h3>
+
+<div>
+  <a href="{% url 'update' finch.id %}">Edit</a>
+  <a href="{% url 'delete' finch.id %}">Delete</a>
+</div>
+
+<div>
+  <div>
+    <form action="{% url 'add_feeding' finch.id %}" method="POST">
+      {% csrf_token %}
+      <!-- Render the inputs -->
+      {{ feeding_form.as_p }}
+      <input type="submit" class="btn" value="Add Feeding">
+    </form>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Meal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for feeding in finch.feeding_set.all %}
+          <tr>
+            <td>{{feeding.date}}</td>
+            <td>{{feeding.get_meal_display}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col s6">
+    <h3>{{ finch.name }}'s Toys</h3>
+    {% if finch.toys.count %}
+      {% for toy in finch.toys.all %}
+          <p>A <span style="color: {{ toy.color }}">{{ toy.color }}</span> {{ toy.name }}</p>
+          <form action="{% url 'unassoc_toy' finch.id toy.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn red">Remove</button>
+          </form>
+      {% endfor %}
+    {% else %}
+      <h5>No Toys</h5>
+    {% endif %}
+  </div>
+</div>
+<div>
+  <h3>Available Toys</h3>
+  {% if toys.count %}
+    {% for toy in toys.all %}
+      <p>A <span style="color: {{ toy.color }}">{{ toy.color }}</span> {{ toy.name }}</p>
+      <form action="{% url 'assoc_toy' finch.id toy.id %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn">Add</button>
+      </form>
+    {% endfor %}
+  {% else %}
+    <h5>{{cat.name}} Already Has All Toys Available</h5>
+  {% endif %}
+</div>
+<script>
+  const dateEl = document.getElementById('id_date');
+  console.log(dateEl);
+  // M is Materialize's global variable
+  M.Datepicker.init(dateEl, {
+    format: 'yyyy-mm-dd',
+    defaultDate: new Date(),
+    setDefaultDate: true,
+    autoClose: true
+  });
+
+  const selectEl = document.getElementById('id_meal');
+  M.FormSelect.init(selectEl);
+</script>
+{% endblock %}

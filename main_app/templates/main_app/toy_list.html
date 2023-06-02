@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>All Toys</h1>
+
+<ul>
+    {% for toy in toy_list %}
+        <li>
+            <p>A <span style="color: {{ toy.color }}">{{ toy.color }}</span> {{ toy.name }}</p>
+            <a href="{% url 'toys_detail' toy.id %}">More</a>
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

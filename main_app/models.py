@@ -8,6 +8,7 @@ MEALS = (
     ('D', 'Dinner')
 )
 
+
 class Toy(models.Model):
     name = models.CharField(max_length=100)
     color = models.CharField(max_length=100)
@@ -29,6 +30,13 @@ class Finch(models.Model):
     
     def fed_for_today(self):
         return self.feeding_set.filter(date=date.today()).count() >= len(MEALS)
+        
+class Photo(models.Model):
+    url = models.CharField(max_length=200)
+    finch = models.ForeignKey(Finch, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Photo for finch_id: {self.finch_id} @{self.url}"
     
 class Feeding(models.Model):
       # the first optional positional argument overrides the label
